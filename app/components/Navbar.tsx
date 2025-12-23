@@ -20,10 +20,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Déclenche l'effet de fond après 50px de scroll
       setScrolled(window.scrollY > 50)
-
-      // Détection de la section active
+      
       const sections = navLinks.map(link => link.href.slice(1))
       for (const section of sections.reverse()) {
         const element = document.getElementById(section)
@@ -54,15 +52,14 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
+      // CORRECTION ICI : Si on scroll OU si le menu est ouvert (isOpen), on met le fond noir
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'bg-black/80 backdrop-blur-xl shadow-2xl shadow-green-500/10 border-b border-gray-800' 
+        scrolled || isOpen 
+          ? 'bg-black/90 backdrop-blur-xl shadow-2xl shadow-green-500/5 border-b border-gray-800' 
           : 'bg-transparent'
       }`}
     >
-      {/* Fond animé avec dégradés verts (visible surtout quand transparent) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Dégradé vert animé */}
         <motion.div
           animate={{
             x: [0, 100, 0],
@@ -72,8 +69,6 @@ export default function Navbar() {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -top-24 -left-24 w-64 h-64 bg-green-500/20 rounded-full blur-3xl opacity-50"
         />
-        
-        {/* Dégradé emerald animé */}
         <motion.div
           animate={{
             x: [0, -80, 0],
@@ -85,17 +80,16 @@ export default function Navbar() {
         />
       </div>
 
-      {/* Ligne lumineuse en bas (uniquement au scroll) */}
       <motion.div
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: scrolled ? 1 : 0 }}
+        // CORRECTION : La ligne verte apparait aussi si le menu est ouvert
+        animate={{ scaleX: scrolled || isOpen ? 1 : 0 }}
         transition={{ duration: 0.5 }}
         className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-500 to-transparent"
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex items-center justify-between py-4">
-          {/* LOGO AF + Portfolio */}
           <motion.button
             type="button"
             whileHover={{ scale: 1.02 }}
@@ -103,19 +97,15 @@ export default function Navbar() {
             onClick={() => scrollToSection('#accueil')}
             className="flex items-center gap-3 focus:outline-none"
           >
-            {/* Icône carrée verte */}
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-md shadow-green-500/20">
               <span className="text-xs font-semibold">&lt;/&gt;</span>
             </div>
-
-            {/* Texte AF / Portfolio */}
             <div className="flex flex-col leading-tight text-left">
               <span className="text-sm font-semibold text-white">AF</span>
               <span className="text-[0.7rem] text-gray-400">Portfolio</span>
             </div>
           </motion.button>
 
-          {/* Navigation desktop */}
           <div className="hidden items-center space-x-1 lg:space-x-2 md:flex">
             {navLinks.map((link, index) => (
               <motion.button
@@ -145,20 +135,21 @@ export default function Navbar() {
             </motion.a>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* CORRECTION DU BOUTON MOBILE : Meilleur style */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(!isOpen)}
-            className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors md:hidden ${
-              isOpen ? 'bg-gray-800 text-green-400' : 'bg-gray-800/50 text-white hover:bg-gray-800'
+            className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-300 md:hidden ${
+              isOpen 
+                ? 'bg-gray-800 text-green-400 border-green-500/30' 
+                : 'bg-white/5 text-gray-200 border-white/10 hover:bg-white/10 backdrop-blur-md'
             }`}
           >
-            <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="text-xl" />
+            <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="text-lg" />
           </motion.button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -166,7 +157,8 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="border-b border-gray-800 bg-black/95 backdrop-blur-xl md:hidden overflow-hidden"
+            // CORRECTION : Fond légèrement plus foncé et bordure en haut pour séparer
+            className="border-t border-gray-800 bg-black/95 backdrop-blur-xl md:hidden overflow-hidden"
           >
             <div className="space-y-2 px-4 py-6">
               {navLinks.map((link, index) => (
@@ -176,10 +168,10 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => scrollToSection(link.href)}
-                  className={`block w-full rounded-xl px-4 py-3 text-left transition-all duration-300 ${
+                  className={`block w-full rounded-xl px-4 py-3 text-left transition-all duration-300 font-medium ${
                     activeSection === link.href.slice(1)
                       ? 'bg-green-500/10 text-green-400 border-l-4 border-green-500'
-                      : 'text-gray-300 hover:bg-gray-900 hover:text-white'
+                      : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
                   }`}
                 >
                   {link.label}
@@ -191,7 +183,7 @@ export default function Navbar() {
                 transition={{ delay: 0.5 }}
                 href="/cv.pdf"
                 target="_blank"
-                className="mt-4 block w-full rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-3 text-center font-medium text-white hover:shadow-lg hover:shadow-green-500/20 transition-all"
+                className="mt-6 block w-full rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-3 text-center font-bold text-white hover:shadow-lg hover:shadow-green-500/20 transition-all active:scale-95"
               >
                 Télécharger CV
               </motion.a>
