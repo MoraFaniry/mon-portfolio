@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Changement de bg-gray-900 à bg-black pour un contraste maximal avec le vert */
+  @apply bg-black text-white overflow-x-hidden;
+}
+
+@layer components {
+  /* Gradients Verts */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-emerald-400 to-green-500;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-r from-green-500 via-emerald-500 to-green-600;
+  }
+
+  .gradient-bg-hover {
+    @apply hover:from-green-400 hover:via-emerald-400 hover:to-green-500;
+  }
+
+  /* Ombres Vertes */
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-green-500/20;
+  }
+
+  .nav-link {
+    @apply relative text-gray-300 hover:text-white transition-colors duration-300;
+  }
+
+  /* Ligne de soulignement verte */
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-[-4px] left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .skill-bar {
+    @apply bg-gradient-to-r from-green-500 to-emerald-600 h-full rounded-full transition-all duration-1000;
+  }
+
+  .blob {
+    @apply animate-morph;
+  }
+
+  /* Glassmorphism adapté au fond noir */
+  .glass-effect {
+    @apply bg-gray-900/60 backdrop-blur-xl border border-gray-800;
+  }
+
+  /* Effet Glow Vert (RGB pour Green-500 est approx 34, 197, 94) */
+  .glow {
+    box-shadow: 0 0 40px rgba(34, 197, 94, 0.3);
+  }
+
+  .glow-hover:hover {
+    box-shadow: 0 0 60px rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* Custom scrollbar - Thème Vert */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-black;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-green-500 to-emerald-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply from-green-400 to-emerald-500;
+}
+
+/* Selection color - Texte sélectionné en vert */
+::selection {
+  @apply bg-green-500/30 text-green-100;
+}
